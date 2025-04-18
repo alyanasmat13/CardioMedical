@@ -159,7 +159,6 @@
     justify-content: center;
     gap: 50px;
     opacity: 0;
-    margin-top: 50px;
     animation: fade 2s forwards 2s;
 }
 
