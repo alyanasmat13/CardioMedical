@@ -1,4 +1,4 @@
-// Tab functionality: Make tabs clickable and navigate to their respective pages
+// Tab functionality
 document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
         const href = tab.querySelector('img').getAttribute('href');
@@ -8,7 +8,7 @@ document.querySelectorAll('.tab').forEach(tab => {
     });
 });
 
-// Quote animation: Swipe quotes in from the side
+// Quote animation
 const quotes = [
     '"Big changes start with bold hearts."',
     '"Empowering the future of medicine."',
