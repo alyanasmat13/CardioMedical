@@ -139,6 +139,7 @@ h1, h2 {
     height: auto;
     animation-name: fade;
     animation-duration: 2s;
+    width: 20%
 }
 
 .intro{
@@ -705,13 +706,87 @@ h1, h2 {
     transition: transform 0.5s ease, opacity 0.5s ease;
 }
 
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: transparent;
+}
+
+.login-form label {
+    font-size: 18px;
+    color: #ffffff;
+    font-family: 'Raleway', Arial, sans-serif;
+    background-color: transparent;
+    margin-bottom: -10px;
+}
+
+.login-form input[type="email"],
+.login-form input[type="password"],
+.login-form input[type="text"] {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #d147a3;
+    font-size: 16px;
+    font-family: 'Raleway', Arial, sans-serif;
+}
+
+.login-form button {
+    background-color: #d147a3;
+    color: rgb(253, 231, 241);
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-form button:hover {
+    background-color: #f318aa;
+}
+
+.login-intro {
+    max-width: 400px;
+    margin: 0 auto;
+    background: #ff6ca2;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    text-align: center;
+    animation: fade 2s forwards 2s;
+    opacity: 0;
+}
+
+.login-intro h1 {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: rgb(253, 231, 241);
+    background-color: transparent;
+}
+
+.login-intro p {
+    color:#cc377d; 
+    font-weight:bold; 
+    background:transparent;
+}
+
+.message {
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.error {
+    background: #fee; 
+    color: #c33;      
+    border: 1px solid #fcc;
+}
+.success {
+    background: #efe;    
+    color: #363;        
+    border: 1px solid #cfc;
 }
