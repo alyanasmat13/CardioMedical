@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register - Cardio Medical</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="scripts/supabase-config.js"></script>
   </head>
   <body>
     <div class="header">
@@ -25,17 +26,29 @@
     <div class="logo">
       <img src="images/logos/Cardio Only Logo.png" alt="Cardio Medical Logo"/>
     </div>
-    <div class="login-intro">
+    
+    <div class="signup-intro">
       <h1>Register</h1>
-      <form class="login-form">
-        <label for="fullname">Full Name</label>
-        <input type="text" id="fullname" name="fullname" placeholder="Enter Full Name" required>
+
+      <div id="message"></div>
+
+      <form id="signupForm" class="signup-form">
+
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" name="fullname" placeholder="Enter Full Name" required>
+
         <label for="email">Email</label>
         <input type="email" id="email" name="email" placeholder="Enter Email" required>
+
         <label for="password">Password</label>
         <input type="password" id="password" name="password" placeholder="Enter Password" required>
+
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter Password" required>
+
         <p>Only authorized members can register.</p>
-        <button onclick="signUp()">Register</button>
+
+        <button type="submit" class="signup-btn" id="signupBtn">Create Account</button>
       </form>
     </div>
     <div class="footer">
@@ -58,8 +71,85 @@
         <p>&copy; 2025 Cardio Medical. All rights reserved.</p>
       </div>
     </div>
-    <script src="supabase-config.js">
-        
+    <script>
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', async function() {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (session) {
+                // User is already logged in, redirect to blog admin
+                window.location.href = 'blog-admin.html';
+            }
+        });
+
+        // Handle signup form submission
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const fullName = document.getElementById('fullName').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const signupBtn = document.getElementById('signupBtn');
+
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                showMessage('Passwords do not match', 'error');
+                return;
+            }
+
+            // Update button state
+            signupBtn.disabled = true;
+            signupBtn.textContent = 'Creating account...';
+
+            try {
+                // First check if email is in approved members list
+                const memberResult = await checkMembershipStatus(email);
+                if (!memberResult.ok) {
+                    throw new Error(memberResult.error?.message || 'Membership check failed');
+                }
+                if (!memberResult.data) {
+                    throw new Error('Email not found in approved members list. Please contact an administrator.');
+                }
+ 
+                // Create the user account
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            full_name: fullName
+                        }
+                    }
+                });
+
+                if (error) {
+                    throw error;
+                }
+
+                if (data.user && !data.session) {
+                    // Email confirmation required
+                    showMessage('Registration successful! Please check your email for a confirmation link.', 'success');
+                } else if (data.session) {
+                    // No email confirmation required, user is logged in
+                    showMessage('Account created successfully! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'blog-admin.html';
+                    }, 2000);
+                }
+
+            } catch (error) {
+                showMessage('Registration failed: ' + error.message, 'error');
+            } finally {
+                signupBtn.disabled = false;
+                signupBtn.textContent = 'Create Account';
+            }
+        });
+
+        // Show message to user
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `<div class="message ${type}">${message}</div>`;
+        }
     </script>
   </body>
 </html>
